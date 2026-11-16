@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 *.part
 *.plain.glb
+
+.hermes-tmp.*/
