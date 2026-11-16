@@ -1,16 +1,19 @@
 # Tripo 3D Downloader
 
-Download 3D model dari [studio.tripo3d.ai](https://studio.tripo3d.ai/3d-model-gallery) **tanpa memakai credit**.
-GUI untuk desktop dan CLI untuk server/script. Jalan di Windows, macOS, dan Linux.
+**[English](README.md) · [Bahasa Indonesia](README.id.md)**
+
+Download 3D models from [studio.tripo3d.ai](https://studio.tripo3d.ai/3d-model-gallery)
+**without spending credits**. Desktop GUI plus a CLI for servers and scripts.
+Runs on Windows, macOS, and Linux.
 
 ```
         ┌──────────────────────────────────────────────┐
         │  Tripo 3D Downloader                         │
         │  ┌────────────────────────────────────────┐  │
-        │  │ paste URL model (satu per baris)       │  │
+        │  │ paste model URLs (one per line)        │  │
         │  └────────────────────────────────────────┘  │
         │  Folder: ~/Downloads/tripo_dl      [Browse]  │
-        │  Format: [Auto (asli) ▾]                  │
+        │  Format: [Auto (native) ▾]                │
         │                                [ Download ]  │
         │  ┌─────────────┬───────────────┬──────────┐  │
         │  │ Model       │ Status        │ Size     │  │
@@ -19,139 +22,139 @@ GUI untuk desktop dan CLI untuk server/script. Jalan di Windows, macOS, dan Linu
         └──────────────────────────────────────────────┘
 ```
 
-## Kenapa bisa tanpa credit?
+## Why does this not cost credits?
 
-Halaman model menyimpan URL aset aslinya (signed CloudFront URL) di dalam payload
-Nuxt (`model_url`). URL itu cukup dibuka langsung — tidak butuh login, tidak butuh
-cookie, dan **tidak memotong credit**. Credit hanya terpotong kalau memakai tombol
-_Export_ di dalam aplikasi Tripo. Program ini tidak pernah menyentuh API export.
+Each model page ships the original asset URL (a signed CloudFront URL) inside its
+Nuxt payload (`model_url`). That URL can simply be fetched — no login, no cookies,
+and **no credit deducted**. Credits are only charged by the _Export_ button inside
+the Tripo app, and this tool never touches the export API.
 
-Tombol Export tetap satu-satunya cara mendapatkan format lain dari Tripo. Kalau
-kamu pilih format lain di program ini, konversi dilakukan **lokal pakai Blender**.
+Export is still the only way to get other formats straight from Tripo. When you
+pick a different format here, the conversion happens **locally with Blender**.
 
-## Kebutuhan
+## Requirements
 
-| Bagian | Perlu | Catatan |
+| Part | Needs | Notes |
 |---|---|---|
-| Semua fitur download | Python 3.9+ dan `curl_cffi` | CLI & GUI |
-| GUI | `tkinter` | sudah ada di Windows & macOS; Linux perlu paket |
-| Konversi format (FBX/OBJ/STL) | Blender 3.x/4.x | opsional, hanya kalau memilih format selain asli |
-| Model GLB ber-`meshopt` → konversi | Node.js (`npx`) | dipakai otomatis untuk decode |
+| All download features | Python 3.9+ and `curl_cffi` | CLI & GUI |
+| GUI | `tkinter` | bundled with Python on Windows & macOS; a package on Linux |
+| Format conversion (FBX/OBJ/STL) | Blender 3.x/4.x | optional, only for non-native formats |
+| `meshopt` GLB → conversion | Node.js (`npx`) | used automatically to decode |
 
-## Instal
+## Install
 
 ### Windows
 
-1. Install Python dari [python.org](https://www.python.org/downloads/) — centang **Add python.exe to PATH**.
-2. Download repo ini (Code → Download ZIP, lalu extract).
-3. Double-click **`install.bat`** (membuat `.venv` + memasang dependensi, lalu membuka GUI).
+1. Install Python from [python.org](https://www.python.org/downloads/) — tick **Add python.exe to PATH**.
+2. Download this repo (Code → Download ZIP, then extract).
+3. Double-click **`install.bat`** (creates `.venv`, installs deps, opens the GUI).
 
-Mulai berikutnya cukup double-click **`Tripo DL.bat`**.
+After that, just double-click **`Tripo DL.bat`**.
 
 ### macOS
 
 ```bash
-git clone <repo-url> tripo-dl && cd tripo-dl
+git clone https://github.com/cesarrioaldi/tripo3d-download tripo-dl && cd tripo-dl
 bash install.sh
 ./run.sh
 ```
 
-`tkinter` sudah tersedia di Python dari python.org dan Homebrew (`python-tk`). Kalau
-muncul error tkinter: `brew install python-tk`.
+`tkinter` ships with Python from python.org and Homebrew. If you hit a tkinter
+error: `brew install python-tk`.
 
 ### Linux
 
 ```bash
 sudo apt install python3-tk python3-venv   # Debian/Ubuntu (Fedora: python3-tkinter)
-git clone <repo-url> tripo-dl && cd tripo-dl
+git clone https://github.com/cesarrioaldi/tripo3d-download tripo-dl && cd tripo-dl
 bash install.sh
 ./run.sh
 ```
 
-Tanpa venv:
+Without a venv:
 
 ```bash
 pip install -r requirements.txt
 python3 tripo_app.py
 ```
 
-### UI di OS lain — bagaimana?
+### What about the UI on other OSes?
 
-Tidak perlu UI terpisah. GUI-nya **tkinter**, yang sudah jadi bagian Python di
-ketiga OS, jadi tampilan dan perilakunya sama di Windows/macOS/Linux. Satu-satunya
-perbedaan adalah cara memasang paket `tkinter` di Linux (`python3-tk`, satu baris
-di atas). Kalau mesin tidak punya layar (SSH/VPS/CI), pakai CLI — mesin yang sama,
-tanpa tkinter.
+No separate UI is needed. The GUI is **tkinter**, part of Python on all three
+platforms, so it looks and behaves the same on Windows, macOS, and Linux. The only
+difference is installing `tkinter` on Linux (`python3-tk`, one line above). On
+machines without a display (SSH/VPS/CI) use the CLI — same engine, no tkinter.
 
-## Pakai — GUI
+## Usage — GUI
 
-1. Buka aplikasi (`Tripo DL.bat` di Windows, `./run.sh` di macOS/Linux).
-2. Buka halaman model di browser, copy URL-nya, paste ke kotak atas (boleh banyak, satu per baris).
-3. Pilih folder hasil (default `~/Downloads/tripo_dl`).
-4. Pilih **Format**: `Auto (asli)` kalau tidak perlu konversi.
-5. Klik **Download**. Status per model muncul di tabel.
+1. Launch the app (`Tripo DL.bat` on Windows, `./run.sh` on macOS/Linux).
+2. Open a model page in your browser, copy its URL, paste it into the top box
+   (many at once is fine, one per line).
+3. Pick the output folder (default `~/Downloads/tripo_dl`).
+4. Pick a **Format**: keep `Auto (native)` if you don't need conversion.
+5. Hit **Download**. Per-model status shows up in the table.
 
-URL dari `tripo3d.ai` atau `www.tripo3d.ai` otomatis diarahkan ke `studio.tripo3d.ai`
-(hanya domain itu yang menyajikan halaman model).
+URLs from `tripo3d.ai` or `www.tripo3d.ai` are rewritten to `studio.tripo3d.ai`
+automatically (only that domain serves the model pages).
 
-## Pakai — CLI
+## Usage — CLI
 
 ```bash
 python tripo_cli.py <url> [<url> ...] [-o folder] [-f auto|glb|fbx|obj|stl]
 
-# contoh
-python tripo_cli.py "https://studio.tripo3d.ai/3d-model/nama-model-<uuid>" -o ~/Downloads/tripo_dl
+# examples
+python tripo_cli.py "https://studio.tripo3d.ai/3d-model/some-model-<uuid>" -o ~/Downloads/tripo_dl
 python tripo_cli.py url1 url2 -f fbx -o ./models
 ```
 
-Exit code `0` kalau semua sukses, `1` kalau ada yang gagal — aman dipakai di script.
+Exit code `0` when everything succeeded, `1` if anything failed — safe for scripts.
 
-## Format & konversi
+## Formats & conversion
 
-| Pilihan | Yang terjadi |
+| Option | What happens |
 |---|---|
-| `Auto (asli)` | simpan apa adanya dari server: biasanya `.glb`, kadang `.fbx` |
-| `GLB` / `FBX` / `OBJ` / `STL` | unduh aslinya dulu, lalu konversi lokal dengan Blender |
+| `Auto (native)` | saves whatever the server serves: usually `.glb`, sometimes `.fbx` |
+| `GLB` / `FBX` / `OBJ` / `STL` | downloads the native file, then converts locally with Blender |
 
-Catatan konversi:
+Conversion notes:
 
-- Blender dicari otomatis (PATH, lokasi umum per OS). Kalau tidak ketemu, set
-  `BLENDER_PATH=/path/ke/blender`.
-- GLB dari Tripo memakai `EXT_meshopt_compression`, yang tidak dibaca Blender.
-  Program mendeteksinya lalu men-decode dulu lewat `npx @gltf-transform/cli`
-  (butuh Node.js). Tanpa Node, konversi GLB akan gagal dengan pesan jelas.
-- Konversi mempertahankan tekstur/material sebisa mungkin; STL memang tanpa material.
+- Blender is auto-detected (PATH, common per-OS locations). If it isn't found, set
+  `BLENDER_PATH=/path/to/blender`.
+- Tripo GLBs use `EXT_meshopt_compression`, which Blender cannot read. The tool
+  detects this and decodes it first through `npx @gltf-transform/cli` (needs
+  Node.js). Without Node, GLB conversion fails with a clear message.
+- Conversion keeps textures/materials wherever possible; STL has none by design.
 
 ## Troubleshooting
 
-| Gejala | Penyebab & solusi |
+| Symptom | Cause & fix |
 |---|---|
-| `HTTP 404` | URL bukan dari `studio.tripo3d.ai`, atau modelnya sudah dihapus/private |
-| `Cloudflare challenge page` | tantangan CF muncul; klik Download lagi (biasanya lolos) |
+| `HTTP 404` | URL isn't from `studio.tripo3d.ai`, or the model was deleted/made private |
+| `Cloudflare challenge page` | Cloudflare challenge served; click Download again (usually passes) |
 | `Missing dependency` | `pip install curl_cffi` |
 | `No module named tkinter` | Linux: `sudo apt install python3-tk`; macOS: `brew install python-tk` |
-| `Blender tidak ditemukan` | install Blender atau set `BLENDER_PATH` |
-| `butuh Node.js (npx)` | install Node.js, atau pakai format `Auto` |
-| `format tidak dikenali` | server mengirim sesuatu yang bukan model 3D; cek URL |
-| File `.part` tertinggal | download terputus; file dihapus otomatis, ulangi |
+| `Blender tidak ditemukan` (Blender not found) | install Blender or set `BLENDER_PATH` |
+| `butuh Node.js (npx)` (needs Node.js) | install Node.js, or use format `Auto` |
+| `format tidak dikenali` (unknown format) | the server returned something that isn't a 3D model; check the URL |
+| Leftover `.part` file | download was interrupted; the file is cleaned up automatically, just retry |
 
-## Struktur
+## Layout
 
 ```
 tripo_app.py      GUI + engine (fetch, extract, download, convert)
-tripo_cli.py      CLI, memakai engine yang sama
-tripo_convert.py  script sisi Blender untuk konversi
+tripo_cli.py      CLI using the same engine
+tripo_convert.py  Blender-side conversion script
 requirements.txt  curl_cffi
-install.sh/.bat   installer per OS
-run.sh            launcher GUI (macOS/Linux)
-Tripo DL.bat      launcher GUI (Windows)
+install.sh/.bat   per-OS installers
+run.sh            GUI launcher (macOS/Linux)
+Tripo DL.bat      GUI launcher (Windows)
 ```
 
-## Batasan
+## Limitations
 
-- Hanya mengambil aset yang memang dipublikasikan di galeri publik Tripo.
-- URL aset bersifat signed dan kedaluwarsa (~24 jam). Program selalu mengambil URL
-  baru dari halaman saat itu juga, jadi tidak masalah untuk pemakaian normal.
-- Format lain dari server (mis. USDZ) tetap hanya lewat Export resmi Tripo.
+- Only fetches assets that are published in Tripo's public gallery.
+- Asset URLs are signed and expire (~24h). The tool always pulls a fresh URL from
+  the page at that moment, so normal use is unaffected.
+- Other server-side formats (e.g. USDZ) remain export-only via Tripo.
 
-Aset 3D tetap milik pembuatnya masing-masing. Pakai dengan bijak.
+3D assets remain the property of their respective creators. Use responsibly.
